@@ -50,7 +50,7 @@ pipeline
         {
             steps
             {   
-                sh "docker login -u $CREDENCIAIS_USR -p $CREDENCIAIS_PSW localhost:8081"
+                // sh "docker login -u $CREDENCIAIS_USR -p $CREDENCIAIS_PSW localhost:8081"
                 sh "curl -v --user '$CREDENCIAIS_USR:$CREDENCIAIS_PSW' --upload-file ./*.jar http://localhost:8081/repository/raw/artefacto.jar"
             }
         }
