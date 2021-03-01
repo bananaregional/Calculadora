@@ -2,7 +2,7 @@ pipeline {
     agent any
     parameters {
 
-        string(name: 'IMAGE_NAME', defaultValue:'java-calculator', description:'Name of the Image')
+        string(name: 'DOCKER_IMAGE_NAME', defaultValue:'java-calculator', description:'Name of the Image')
 
         string(name: 'JAR_NAME', defaultValue:'calculadora', description:'Name of the .jar file')
 
@@ -33,7 +33,7 @@ pipeline {
         stage("store artifact on Nexus") {
             steps{
                 withCredentials([usernameColonPassword(credentialsId: 'curl-jenkinsfile-uploadArt-nexus', variable: 'USERPASS')]) {
-                sh 'curl -v -u "$USERPASS" --upload-file /var/jenkins_home/workspace/java-calculator-nexus/"$JAR_NAME".jar http://nexus:8081/repository/my-raw/'
+                sh 'curl -v -u "$USERPASS" --upload-file /var/jenkins_home/workspace/Calculadora-Pipeline/"$JAR_NAME".jar http://nexus:8081/repository/my-raw/'
             }
         }
     }
@@ -48,9 +48,8 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-login-nexus', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh 'docker login -u "$USERNAME" -p "$PASSWORD" localhost:8082'
-                sh 'docker tag "$IMAGE_NAME":v1.0 localhost:8082/"$IMAGE_NAME":v1.0'
-                sh 'docker push localhost:8082/"$IMAGE_NAME":v1.0'
-
+                sh "docker tag ${DOCKER_IMAGE_NAME}:v1.0 localhost:8082/${DOCKER_IMAGE_NAME}:v1.0"
+                sh "docker push localhost:8082/${DOCKER_IMAGE_NAME}:v1.0"
             }
         }
     }
