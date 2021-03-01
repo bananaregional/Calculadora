@@ -21,7 +21,7 @@ pipeline
         {
             steps  
             {
-                sh 'javac --release 8 *.java'
+                sh 'javac *.java'
                 sh 'jar cfe teste.jar calculadora *.class'
             }
         }
