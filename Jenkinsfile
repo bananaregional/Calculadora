@@ -10,8 +10,7 @@ pipeline
     }
 
     environment {
-        LOGIN_ID    = credentials('admin')
-        LOGIN_PW = credentials('admin')
+        CREDENCIAIS = credentials('admin')
     }
 
     stages
@@ -31,7 +30,7 @@ pipeline
             {
                 sh "docker build -t ${DOCKER_IMAGE_NAME}:v1.0 ."
 
-                sh "docker login -u admin -p admin localhost:8082"
+                sh "docker login -up $CREDENCIAIS localhost:8082"
                 sh "docker tag ${DOCKER_IMAGE_NAME}:v1.0 localhost:8082/${DOCKER_IMAGE_NAME}:v1.0"
             }
         }
@@ -51,7 +50,7 @@ pipeline
         {
             steps
             {
-                sh "curl -v --user 'admin:admin' --upload-file ./*.jar http://localhost:8081/repository/raw/artefacto.jar"
+                sh "curl -v --user '$CREDENCIAIS' --upload-file ./*.jar http://localhost:8081/repository/raw/artefacto.jar"
             }
         }
         stage('Clean up')
