@@ -32,7 +32,7 @@ pipeline {
 
         stage("store artifact on Nexus") {
             steps{
-                withCredentials([usernameColonPassword(credentialsId: 'curl-jenkinsfile-uploadArt-nexus', variable: 'USERPASS')]) {
+                withCredentials([usernameColonPassword(credentialsId: 'admin', variable: 'USERPASS')]) {
                 sh 'curl -v -u "$USERPASS" --upload-file /var/jenkins_home/workspace/Calculadora-Pipeline/"$JAR_NAME".jar http://nexus:8081/repository/my-raw/'
             }
         }
@@ -46,7 +46,7 @@ pipeline {
 
         stage('Push Image to Nexus') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-login-nexus', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'admin', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh 'docker login -u "$USERNAME" -p "$PASSWORD" localhost:8082'
                 sh "docker tag ${DOCKER_IMAGE_NAME}:v1.0 localhost:8082/${DOCKER_IMAGE_NAME}:v1.0"
                 sh "docker push localhost:8082/${DOCKER_IMAGE_NAME}:v1.0"
