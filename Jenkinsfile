@@ -18,12 +18,13 @@ pipeline
     {
         
         stage ('Build .jar')
+        {
             steps  
             {
                 sh 'javac --release 8 *.java'
                 sh 'jar cfe teste.jar calculadora *.class'
             }
-  
+        }
         stage('Docker build')
         {
             steps
