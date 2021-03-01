@@ -51,7 +51,7 @@ pipeline
         {
             steps
             {
-                sh "curl -v --user 'admin:admin' --upload-file ./*.jar http://nexus:8081/repository/raw/artefacto.jar"
+                sh "curl -v --user 'admin:admin' --upload-file ./*.jar http://localhost:8081/repository/raw/artefacto.jar"
             }
         }
         stage('Clean up')
