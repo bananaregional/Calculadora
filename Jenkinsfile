@@ -24,7 +24,8 @@ pipeline {
                    // -Dsonar.projectKey=Cloud7:TarefaCalculadora \
                    // -Dsonar.host.url=http://localhost:9000 \
                     //-Dsonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13'
-                //}
+                //
+                }
             }
         }
           
