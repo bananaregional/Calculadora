@@ -13,22 +13,12 @@ pipeline {
         
     stages{
         
-
-        stage("SonarQube check") {
-            steps {
-              node {
-                stage('SCM') {
-                    git 'https://github.com/foo/bar.git'
-                }
-                stage('SonarQube analysis') {
-                    withSonarQubeEnv(credentialsId: 'ea72adad944d5e4ca8ecf0feb21cdf49d86473fe', installationName: 'sonarqube') { // You can override the credential to be used
-                    sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
-                    }
-                }
-                }
+        stage('SonarQube analysis') {
+            withSonarQubeEnv(credentialsId: 'ea72adad944d5e4ca8ecf0feb21cdf49d86473fe', installationName: 'sonarqube') { // You can override the credential to be used
+            sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
             }
         }
-        
+          
 
         stage("Build Jar"){
             steps{
@@ -42,9 +32,9 @@ pipeline {
             steps{
                 withCredentials([usernameColonPassword(credentialsId: 'admin', variable: 'USERPASS')]) {
                 sh 'curl -v -u "$USERPASS" --upload-file /var/jenkins_home/workspace/Calculadora-Pipeline/"$JAR_NAME".jar http://localhost:8081/repository/my-raw/'
+                }
             }
         }
-    }
 
         stage('Create Docker Image') {
             steps {
@@ -58,10 +48,10 @@ pipeline {
                 sh 'docker login -u "$USERNAME" -p "$PASSWORD" localhost:8082'
                 sh "docker tag ${DOCKER_IMAGE_NAME}:v1.0 localhost:8082/${DOCKER_IMAGE_NAME}:v1.0"
                 sh "docker push localhost:8082/${DOCKER_IMAGE_NAME}:v1.0"
+                }
             }
         }
-    }
-                stage('Clear WorkSpace') {
+        stage('Clear WorkSpace') {
             steps {
                 cleanWs()
             }
