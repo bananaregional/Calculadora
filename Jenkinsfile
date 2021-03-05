@@ -15,7 +15,8 @@ pipeline {
 
         stage ('Build Maven'){
             steps
-            {
+            {   
+                sh 'apt-get -y install maven'
                 sh 'mvn -DskipTests -f book/pom.xml clean install'
             }
         }
@@ -27,10 +28,10 @@ pipeline {
                // }
                 withSonarQubeEnv(credentialsId: 'token', installationName: 'sonarqube') { // You can override the credential to be used
                 sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
-                //sh 'mvn sonar:sonar \
-                   // -Dsonar.projectKey=Cloud7:TarefaCalculadora \
-                   // -Dsonar.host.url=http://localhost:9000 \
-                    //-Dsonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13'
+                sh 'mvn sonar:sonar \
+                   -Dsonar.projectKey=Cloud7:TarefaCalculadora \
+                   -Dsonar.host.url=http://localhost:9000 \
+                   -Dsonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13'
                 }
             }
         }
