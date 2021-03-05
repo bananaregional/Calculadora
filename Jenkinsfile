@@ -16,12 +16,16 @@ pipeline {
 
         stage("SonarQube check") {
             steps {
-              withSonarQubeEnv('sonarqube') {
-                sh 'mvn clean package sonar:sonar -Dsonar.host.url=http://sonarqube:9000'
-                sh 'mvn sonar:sonar \
-                    -Dsonar.projectKey=Cloud7:TarefaCalculadora \
-                    -Dsonar.host.url=http://localhost:9000 \
-                    -Dsonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13'
+              node {
+                stage('SCM') {
+                    git 'https://github.com/foo/bar.git'
+                }
+                stage('SonarQube analysis') {
+                    withSonarQubeEnv(credentialsId: 'ea72adad944d5e4ca8ecf0feb21cdf49d86473fe', installationName: 'sonarqube') { // You can override the credential to be used
+                    sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
+                    }
+                }
+                }
             }
         }
         }
