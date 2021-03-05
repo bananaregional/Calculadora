@@ -17,7 +17,7 @@ pipeline {
             steps
             {   
                 sh 'apt-get -y install maven'
-                sh 'mvn -DskipTests -f book/pom.xml clean install'
+                //sh 'mvn -DskipTests -f book/pom.xml clean install'
             }
         }
         
