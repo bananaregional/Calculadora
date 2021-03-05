@@ -14,28 +14,23 @@ pipeline {
     stages{
         
 
-        //stage("build & SonarQube analysis") {
-            //steps {
-              //withSonarQubeEnv('sonarqube') {
-                //sh 'mvn clean package sonar:sonar -Dsonar.host.url=http://sonarqube:9000'
-            //}
-        //}
-        //}
+        stage("SonarQube check") {
+            steps {
+              withSonarQubeEnv('sonarqube') {
+                sh 'mvn clean package sonar:sonar -Dsonar.host.url=http://sonarqube:9000'
+                sh 'mvn sonar:sonar \
+                    -Dsonar.projectKey=Cloud7:TarefaCalculadora \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13'
+            }
+        }
+        }
 
         stage("Build Jar"){
             steps{
                 sh 'javac *.java'
                 sh 'jar cfe "$JAR_NAME".jar Calculator *.class'
 
-            }
-        }
-
-        stage("SonarQube check"){
-            steps{
-                sh 'mvn sonar:sonar \
-                    -Dsonar.projectKey=Cloud7:TarefaCalculadora \
-                    -Dsonar.host.url=http://localhost:9000 \
-                    -Dsonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13'
             }
         }
 
