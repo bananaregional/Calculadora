@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'agent' }
+    agents any
     parameters {
 
         string(name: 'DOCKER_IMAGE_NAME', defaultValue:'java-calculator', description:'Name of the Image')
