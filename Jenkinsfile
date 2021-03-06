@@ -13,29 +13,13 @@ pipeline {
         
     stages{
 
-        stage ('Build Maven'){
+        /*stage ('Build Maven'){
             steps
             {   
                 sh 'apt-get -y install maven'
                 //sh 'mvn -DskipTests -f book/pom.xml clean install'
             }
-        }
-        
-        stage('SonarQube analysis') {
-            steps{
-                //withMaven(maven: 'mvn') {
-                 //   sh "mvn clean package"
-               // }
-                withSonarQubeEnv(credentialsId: 'token', installationName: 'sonarqube') { // You can override the credential to be used
-                sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
-                sh 'mvn sonar:sonar \
-                   -Dsonar.projectKey=Cloud7:TarefaCalculadora \
-                   -Dsonar.host.url=http://localhost:9000 \
-                   -Dsonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13'
-                }
-            }
-        }
-          
+        }*/
 
         stage("Build Jar"){
             steps{
@@ -45,7 +29,36 @@ pipeline {
             }
         }
 
-        stage("store artifact on Nexus") {
+        stage ('SonarQube analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'MyScanner';
+                    withSonarQubeEnv ('sonarqube') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                        -D sonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13 \
+                        -D sonar.projectKey=Cloud7:TarefaCalculadora \
+                        -D sonar.java.binaries=/var/jenkins_home/workspace/calculadora-pipeline\
+                        -D sonar.java.source=11 \
+                        -D sonar.host.url=http://localhost:9000"
+                    }
+                }
+            }
+        }
+
+        stage("Quality Gate") {
+            steps {
+                script {
+                    timeout(time: 1, unit: 'HOURS') {
+                        def qualitygate = waitForQualityGate()
+                        if (qualitygate.status != "OK") {
+                        error "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
+                        }
+                    }
+                }
+            }
+        }   
+
+        /*stage("store artifact on Nexus") {
             steps{
                 withCredentials([usernameColonPassword(credentialsId: 'admin', variable: 'USERPASS')]) {
                 sh 'curl -v -u "$USERPASS" --upload-file /var/jenkins_home/workspace/Calculadora-Pipeline/"$JAR_NAME".jar http://localhost:8081/repository/my-raw/'
@@ -72,6 +85,6 @@ pipeline {
             steps {
                 cleanWs()
             }
-        }
+        }*/
     } 
 }
