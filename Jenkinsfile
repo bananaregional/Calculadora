@@ -32,8 +32,8 @@ pipeline {
         stage ('SonarQube analysis') {
             steps {
                 script {
-                    def scannerHome = tool name: 'sonar_scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
-                    withSonarQubeEnv ('sonar_scanner') {
+                    def scannerHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
+                    withSonarQubeEnv ('sonarqube') {
                         sh "${scannerHome}/bin/sonar-scanner \
                         -D sonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13 \
                         -D sonar.projectKey=Cloud7:TarefaCalculadora \
