@@ -53,7 +53,7 @@ pipeline {
                                     -D sonar.projectKey=Cloud7:TarefaCalculadora \
                                     -D sonar.java.binaries=/var/jenkins_home/workspace/calculadora-pipeline\
                                     -D sonar.java.source=11 \
-                                    -D sonar.host.url=http://localhost:9000"
+                                    -D sonar.host.url=http://sonarqube:9000"
                             }
                         }
                         timeout(time: 10, unit: 'MINUTES') {
