@@ -32,7 +32,7 @@ pipeline {
         stage ('SonarQube analysis') {
             steps {
                 script {
-                    def scannerHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
+                    def scannerHome = tool 'sonarqube';
                     withSonarQubeEnv ('sonarqube') {
                         sh "${scannerHome}/bin/sonar-scanner \
                         -D sonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13 \
