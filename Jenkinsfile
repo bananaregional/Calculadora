@@ -32,18 +32,40 @@ pipeline {
         stage ('SonarQube analysis') {
             steps {
                 script {
-                    def scannerHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
+                    /*def scannerHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
                     withSonarQubeEnv ('sonarqube') {
                         sh "${scannerHome}/bin/sonar-scanner \
                         -D sonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13 \
                         -D sonar.projectKey=Cloud7:TarefaCalculadora \
                         -D sonar.java.binaries=/var/jenkins_home/workspace/calculadora-pipeline\
                         -D sonar.java.source=11 \
-                        -D sonar.host.url=http://localhost:9000"
-                    }
+                        -D sonar.host.url=http://localhost:9000" */
+
+            
+                        def scannerHome = tool 'sonarqube'
+                        withSonarQubeEnv("sonarqube") {
+                            if(fileExists("sonar-project.properties")) {
+                                sh "${scannerHome}/bin/sonar-scanner"
+                            }
+                            else {
+                                sh "${scannerHome}/bin/sonar-scanner \
+                                    -D sonar.login=632ed5de555469417baeafc58aebf35f8a3d4f13 \
+                                    -D sonar.projectKey=Cloud7:TarefaCalculadora \
+                                    -D sonar.java.binaries=/var/jenkins_home/workspace/calculadora-pipeline\
+                                    -D sonar.java.source=11 \
+                                    -D sonar.host.url=http://localhost:9000"
+                            }
+                        }
+                        timeout(time: 10, unit: 'MINUTES') {
+                            waitForQualityGate abortPipeline: true
+                        }
+                    
                 }
             }
         }
+        
+
+        
 
         stage("Quality Gate") {
             steps {
