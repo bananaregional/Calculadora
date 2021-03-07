@@ -65,10 +65,7 @@ pipeline {
             }
         }
         
-
-        
-
-        stage("Quality Gate") {
+        /*stage("Quality Gate") {
             steps {
                 script {
                     timeout(time: 1, unit: 'HOURS') {
@@ -79,7 +76,10 @@ pipeline {
                     }
                 }
             }
-        }   
+        }  */
+        
+
+        
 
         /*stage("store artifact on Nexus") {
             steps{
