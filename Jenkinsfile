@@ -37,7 +37,7 @@ pipeline {
                         sh "${scannerHome}/bin/sonar-scanner \
                         -D sonar.login=045bf2b4618d6cf1be066a367ed7766b946238e2 \
                         -D sonar.projectKey=Cloud7:TarefaCalculadora \
-                        -D sonar.java.binaries=/var/jenkins_home/workspace/calculadora-pipeline\
+                        -D sonar.java.binaries=/var/jenkins_home/workspace/Calculadora-Pipeline\
                         -D sonar.java.source=11 \
                         -D sonar.host.url=http://sonarqube:9000"
 
