@@ -60,6 +60,7 @@ pipeline {
                             waitForQualityGate abortPipeline: true
                         }*/
                     
+                    }
                 }
             }
         }
